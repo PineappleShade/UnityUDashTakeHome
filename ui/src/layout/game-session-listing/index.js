@@ -8,7 +8,7 @@ import {
   CardActions,
   CardContent, Dialog, DialogActions, DialogContent, DialogTitle,
   Grid,
-  Link, Rating,
+  Rating,
   Skeleton, TextField,
   Typography
 } from "@mui/material";
@@ -21,6 +21,7 @@ function GameSessionListing(){
   const [rating, setRating] = useState(null);
   const [comment, setComment] = useState(null);
   const [selectedGameSession, setSelectedGameSession] = useState(null);
+  const currentUser = JSON.parse(localStorage.getItem('currentUser'));
 
   useEffect(() => {
     getGameSessions();
@@ -74,7 +75,7 @@ function GameSessionListing(){
   const handleSubmitFeedback = async () => {
     try {
       await axios.post(`${API_ENDPOINT}/feedback/${selectedGameSession}`, {
-        userId: '30ef5656-4500-11ec-81d3-0242ac130003',
+        userId: currentUser.userId,
         rating: rating,
         comment: comment,
       });
@@ -135,12 +136,11 @@ function GameSessionListing(){
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleFeedbackDialogClose} variant="contained" color="primary" /*disabled={isLoadingBugDialog}*/>
+          <Button onClick={handleFeedbackDialogClose} variant="contained" color="primary">
             Cancel
           </Button>
-          <Button onClick={handleSubmitFeedback} variant="contained" color="primary" /*disabled={isLoadingBugDialog}*/>
+          <Button onClick={handleSubmitFeedback} variant="contained" color="primary">
             Submit Feedback
-            {/*{isLoadingBugDialog && <CircularProgress size={24} className={classes.buttonProgress}/>}*/}
           </Button>
         </DialogActions>
       </Dialog>

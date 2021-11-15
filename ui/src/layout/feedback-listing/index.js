@@ -1,67 +1,70 @@
 import React, { useEffect, useState } from 'react';
 import axios from "axios";
-import {DataGrid, GridRenderCellParams} from "@mui/x-data-grid";
-import {Paper, Rating, Tooltip} from "@mui/material";
-import _ from 'lodash';
+import {DataGrid} from "@mui/x-data-grid";
+import {Rating, Tooltip} from "@mui/material";
 
-// `feedbackId` VARCHAR(36),
-//   `gameSessionId` VARCHAR(36),
-//   `userId` VARCHAR(36),
-//   `rating` INTEGER,
-//   `comment` TEXT,
-//   `created` INT NOT NULL,
+// const columns = [
+//   {
+//     field: 'id',
+//     headerName: 'ID',
+//     minWidth: 300,
+//   },
+//   {
+//     field: 'gameSessionId',
+//     headerName: 'Game Session',
+//     minWidth: 300,
+//   },
+//   {
+//     field: 'userId',
+//     headerName: 'User Id',
+//     minWidth: 300,
+//   },
+//   {
+//     field: 'rating',
+//     headerName: 'Rating',
+//     type: 'number',
+//     // renderCell: (params) => (
+//     //   <Rating
+//     //     value={params.value}
+//     //     readOnly
+//     //   />
+//     // ),
+//     minWidth: 150,
+//   },
+//   {
+//     field: 'comment',
+//     headerName: 'Comment',
+//     // renderCell: (params) => {
+//     //   let cellVal = params.value;
+//     //   if (params.value.length > 140) {
+//     //     cellVal = (
+//     //       <Tooltip title={params.value} placement="bottom-start">
+//     //         <span>{params.value}</span>
+//     //       </Tooltip>
+//     //     )
+//     //   }
+//     //   return cellVal
+//     // },
+//     sortable: false,
+//     minWidth: 700,
+//   },
+//   {
+//     field: 'created',
+//     headerName: 'Created On',
+//     type: 'date',
+//     minWidth: 150,
+//   },
+// ];
+
+const rows = [
+  { id: 1, col1: 'Hello', col2: 'World' },
+  { id: 2, col1: 'DataGridPro', col2: 'is Awesome' },
+  { id: 3, col1: 'MUI', col2: 'is Amazing' },
+];
 
 const columns = [
-  {
-    field: 'id',
-    headerName: 'ID',
-    minWidth: 300,
-  },
-  {
-    field: 'gameSessionId',
-    headerName: 'Game Session',
-    minWidth: 300,
-  },
-  {
-    field: 'userId',
-    headerName: 'User Id',
-    minWidth: 300,
-  },
-  {
-    field: 'rating',
-    headerName: 'Rating',
-    type: 'number',
-    renderCell: (params) => (
-      <Rating
-        value={params.value}
-        readOnly
-      />
-    ),
-    minWidth: 150,
-  },
-  {
-    field: 'comment',
-    headerName: 'Comment',
-    renderCell: (params) => {
-      let cellVal = params.value;
-      if (params.value.length > 140) {
-        cellVal = (
-          <Tooltip title={params.value} placement="bottom-start">
-            <span>{params.value}</span>
-          </Tooltip>
-        )
-      }
-      return cellVal
-    },
-    sortable: false,
-    minWidth: 700,
-  },
-  {
-    field: 'created',
-    headerName: 'Created On',
-    type: 'date',
-    minWidth: 150,
-  },
+  { field: 'col1', headerName: 'Column 1', width: 150 },
+  { field: 'col2', headerName: 'Column 2', width: 150 },
 ];
 
 function FeedbackListing() {
@@ -95,14 +98,17 @@ function FeedbackListing() {
   }
 
   return (
-    <DataGrid
-      rows={rows}
-      columns={columns}
-      disableSelectionOnClick
-      autoHeight
-      autoPageSize
-      loading={isLoading}
-    />
+    <div>
+      {/*<DataGrid*/}
+      {/*  rows={rows}*/}
+      {/*  columns={columns}*/}
+      {/*  // disableSelectionOnClick*/}
+      {/*  // autoHeight*/}
+      {/*  // autoPageSize*/}
+      {/*  // loading={isLoading}*/}
+      {/*/>*/}
+      <DataGrid rows={rows} columns={columns} />
+    </div>
   );
 }
 

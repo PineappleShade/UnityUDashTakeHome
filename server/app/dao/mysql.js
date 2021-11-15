@@ -6,8 +6,8 @@ const exceptions = require('../helpers/exceptions');
 
 const pool = mysql.createPool({
   host: 'localhost',
-  user: 'user',
-  password: 'huf9v3h2o1erbd',
+  user: 'root',
+  password: '',
   database: 'Udb',
 });
 

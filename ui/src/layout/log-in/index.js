@@ -7,7 +7,7 @@ import {
   MenuItem, Select,
 } from "@mui/material";
 import _ from 'lodash';
-import {useHistory} from "react-router-dom";
+import {Link, useHistory, withRouter} from "react-router-dom";
 
 function LogIn(){
   const history = useHistory();
@@ -64,7 +64,7 @@ function LogIn(){
         alignItems: 'center',
       }}
     >
-      <Box component="form" noValidate sx={{ mt: 1 }}>
+      <Box sx={{ mt: 1 }}>
         <FormControl fullWidth>
           <InputLabel id="user-select-label">User</InputLabel>
           <Select
@@ -81,7 +81,7 @@ function LogIn(){
           </Select>
         </FormControl>
         <Button
-          type="submit"
+          component={Link}
           fullWidth
           variant="contained"
           sx={{ mt: 3, mb: 2 }}
@@ -94,4 +94,4 @@ function LogIn(){
   )
 }
 
-export default LogIn;
+export default withRouter(LogIn);
