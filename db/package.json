@@ -8,6 +8,7 @@
     "build": "docker build -t mysql .",
     "run-docker-container": "docker run -d -p '3306:3306' -e 'MYSQL_ALLOW_EMPTY_PASSWORD=true' --name mysql mysql",
     "clean-run": "npm run clean && npm run build && npm run run-docker-container",
+    "clean-build": "npm run clean && npm run build",
     "clean": "docker rm -f mysql"
   },
   "author": "",

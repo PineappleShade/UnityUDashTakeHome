@@ -57,33 +57,12 @@ const query = async (sql, values = []) => {
   });
 };
 
-const select = async ({ ensureExists }, sqlQuery, values= []) => {
-  const response = await query(sqlQuery, values);
-  if(ensureExists && _.isEmpty(response)){
-    throw exceptions.notFound(`${ensureExists}_NOT_FOUND`, _.flatten(values)[0]);
-  }
-  return response;
-};
-
-const call = async ({ connection, ensureExists }, procedure, values = []) => {
+const call = async ( procedure, values = []) => {
   const response = await query('CALL ?? (?);', [procedure, values]);
-  const data = (_.isArray(response[0])) ? response[0] : [];
-  if (ensureExists) {
-    const mysqlResult = (_.isArray(response)) ? response[1] : response;
-    if (mysqlResult.affectedRows === 0 && _.isEmpty(data)) {
-      throw exceptions.notFound(`${ensureExists}_NOT_FOUND`);
-    }
-  }
-  return data;
-};
-
-const close = () => {
-  pool.end();
+  return (_.isArray(response[0])) ? response[0] : [];
 };
 
 module.exports = {
   query,
-  select,
   call,
-  close,
 };
