@@ -20,7 +20,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-function App(props) {
+function App() {
   const classes = useStyles();
   const currentUser = JSON.parse(localStorage.getItem('currentUser'));
 
