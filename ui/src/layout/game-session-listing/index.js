@@ -12,6 +12,7 @@ import {
   Skeleton, TextField,
   Typography
 } from "@mui/material";
+import {Redirect} from "react-router-dom";
 
 function GameSessionListing(){
   const API_ENDPOINT = 'http://localhost:3000/api';
@@ -96,6 +97,9 @@ function GameSessionListing(){
 
   return (
     <Grid container sx={{ padding: 4 }} spacing={2} direction="row" justifyContent="center" alignItems="flex-start">
+      {!localStorage.getItem('currentUser') &&
+        <Redirect to="/" />
+      }
       {isLoading &&
       Array.from(new Array(20)).map((item, index) => (
           <Grid item key={index}>

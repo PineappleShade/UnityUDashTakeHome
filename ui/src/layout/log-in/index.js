@@ -46,11 +46,9 @@ function LogIn(){
     localStorage.setItem('currentUser', JSON.stringify(currentUser));
     console.log({currentUser});
     if (currentUser.userType === 'player'){
-      console.log('player');
       history.push(`/gameSessions`);
     }
     else if (currentUser.userType === 'ops'){
-      console.log('ops');
       history.push(`/feedback`);
     }
   };

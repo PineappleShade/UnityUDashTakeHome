@@ -8,8 +8,10 @@ module.exports = (app) => {
     res.setHeader('Access-Control-Allow-Headers', [
       'Content-Type',
       'Authorization',
-      'X-Pagination-Limit',
-      'X-Pagination-Offset',
+      'x-pagination-limit',
+      'x-pagination-offset',
+      'x-sorting-by',
+      'x-sorting-order',
     ].join(','));
     if (req.method === 'OPTIONS') {
       res.send();

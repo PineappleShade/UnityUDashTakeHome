@@ -5,12 +5,13 @@ import {
   createTheme, CssBaseline, IconButton, Toolbar, Tooltip, Typography,
 } from "@mui/material";
 import {ThemeProvider} from "@emotion/react";
-import {BrowserRouter, Link, Redirect, Route, Switch} from "react-router-dom";
+import {BrowserRouter, Link, Redirect, Route, Switch, useHistory} from "react-router-dom";
 import GameSessionListing from "./layout/game-session-listing";
 import {makeStyles} from "@mui/styles";
 import LogIn from "./layout/log-in";
 import FeedbackListing from "./layout/feedback-listing";
 import ExitToAppRoundedIcon from '@mui/icons-material/ExitToAppRounded';
+import {useEffect, useState} from "react";
 
 const useStyles = makeStyles(() => ({
   navbarLink: {
@@ -22,16 +23,18 @@ const useStyles = makeStyles(() => ({
 
 function App() {
   const classes = useStyles();
-  const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+  const [currentUser, setCurrentUser] = useState(JSON.parse(localStorage.getItem('currentUser')));
 
   const theme = createTheme({
     palette: {
-      mode: 'light',
+      mode: 'dark',
     },
   });
 
-  function logOut(){
+  function logOut(e){
+    e.preventDefault();
     localStorage.removeItem('currentUser');
+    setCurrentUser(null);
   }
 
   return (
@@ -39,6 +42,9 @@ function App() {
       <CssBaseline />
       <BrowserRouter>
         <Box sx={{ flexGrow: 1 }}>
+          {!currentUser &&
+            <Redirect to="/" />
+          }
           <AppBar position="static">
             <Toolbar>
               <Typography component="div" sx={{ flexGrow: 1 }}>
@@ -71,12 +77,14 @@ function App() {
           </AppBar>
         </Box>
         <Switch>
-          <Route exact path='/' component={LogIn}/>
+          <Route exact path='/'>
+            <LogIn/>
+          </Route>
           <Route exact path='/gameSessions'>
-            {currentUser && currentUser.userType === 'player' ? <GameSessionListing /> : <Redirect to="/" /> }
+            <GameSessionListing />
           </Route>
           <Route exact path='/feedback'>
-            {currentUser && currentUser.userType === 'ops' ? <FeedbackListing /> : <Redirect to="/" /> }
+            <FeedbackListing />
           </Route>
         </Switch>
       </BrowserRouter>

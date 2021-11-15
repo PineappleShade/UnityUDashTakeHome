@@ -1,96 +1,63 @@
 import React, { useEffect, useState } from 'react';
 import axios from "axios";
-import {DataGrid} from "@mui/x-data-grid";
-import {Rating, Tooltip} from "@mui/material";
-import _ from "lodash";
+import {
+  FormControl,
+  Grid,
+  InputLabel,
+  MenuItem,
+  Paper,
+  Rating,
+  Select,
+  Table, TableBody, TableCell,
+  TableContainer, TableHead, TableRow, ToggleButton, ToggleButtonGroup,
+  Tooltip
+} from "@mui/material";
+import {makeStyles} from "@mui/styles";
+import {Redirect} from "react-router-dom";
 
-// const columns = [
-//   {
-//     field: 'id',
-//     headerName: 'ID',
-//     minWidth: 300,
-//   },
-//   {
-//     field: 'gameSessionId',
-//     headerName: 'Game Session',
-//     minWidth: 300,
-//   },
-//   {
-//     field: 'userId',
-//     headerName: 'User Id',
-//     minWidth: 300,
-//   },
-//   {
-//     field: 'rating',
-//     headerName: 'Rating',
-//     type: 'number',
-//     // renderCell: (params) => (
-//     //   <Rating
-//     //     value={params.value}
-//     //     readOnly
-//     //   />
-//     // ),
-//     minWidth: 150,
-//   },
-//   {
-//     field: 'comment',
-//     headerName: 'Comment',
-//     // renderCell: (params) => {
-//     //   let cellVal = params.value;
-//     //   if (params.value.length > 140) {
-//     //     cellVal = (
-//     //       <Tooltip title={params.value} placement="bottom-start">
-//     //         <span>{params.value}</span>
-//     //       </Tooltip>
-//     //     )
-//     //   }
-//     //   return cellVal
-//     // },
-//     sortable: false,
-//     minWidth: 700,
-//   },
-//   {
-//     field: 'created',
-//     headerName: 'Created On',
-//     type: 'date',
-//     minWidth: 150,
-//   },
-// ];
-
-const rows = [
-  { id: 1, col1: 'Hello', col2: 'World' },
-  { id: 2, col1: 'DataGridPro', col2: 'is Awesome' },
-  { id: 3, col1: 'MUI', col2: 'is Amazing' },
-];
-
-const columns = [
-  { field: 'col1', headerName: 'Column 1', width: 150 },
-  { field: 'col2', headerName: 'Column 2', width: 150 },
-];
+const useStyles = makeStyles((theme) => ({
+  paper: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  paperItem: {
+    padding: 2,
+  },
+}));
 
 function FeedbackListing() {
   const API_ENDPOINT = 'http://localhost:3000/api';
+  const classes = useStyles();
   const [isLoading, setIsLoading] = useState(false);
   const [rows, setRows] = useState([]);
+  const [orderBy, setOrderBy] = useState('created');
+  const [sortOrder, setSortOrder] = useState('desc');
 
   useEffect(() => {
     getFeedback();
-  }, []);
+  }, [orderBy, sortOrder]);
 
   async function getFeedback(){
     try{
       setIsLoading(true);
-      const feedback = await axios.get(`${API_ENDPOINT}/feedback`)
-      const parsedData = feedback.data.map( f => (
-        {
-          id: f.feedbackId,
-          gameSessionId: f.gameSessionId,
-          userId: f.userId,
-          rating: f.rating,
-          comment: f.comment,
-          created: f.created,
-        }
-      ));
+      const feedback = await axios.get(`${API_ENDPOINT}/feedback`, {headers: {
+        'x-sorting-by': orderBy,
+        'x-sorting-order': sortOrder,
+      }});
+      const parsedData = feedback.data.map( f => {
+        const createdOn = new Date(f.created * 1000);
+        return (
+          {
+            id: f.feedbackId,
+            gameSessionId: f.gameSessionId,
+            userId: f.userId,
+            rating: f.rating,
+            comment: f.comment,
+            created: createdOn.toLocaleString('en-US'),
+          }
+        )
+      });
       setRows(parsedData);
       setIsLoading(false);
     } catch (e) {
@@ -98,53 +65,80 @@ function FeedbackListing() {
     }
   }
 
+  const handleChange = (event) => {
+    setOrderBy(event.target.value);
+  };
+
+  const handleChangeOrderByAscDescFilter = (event, orderAscDescValue) => {
+    setSortOrder(orderAscDescValue);
+  };
+
   return (
     <div>
+      {!localStorage.getItem('currentUser') &&
+        <Redirect to="/" />
+      }
       <Grid container>
-        <Grid item xs={12} className={classes.gridItem}>
-          <Paper className={classes.paper}>
+        <Grid item xs={12} style={{ margin: 10 }}>
+          <Paper className={classes.paper} variant="outlined">
             <div className={classes.paperItem}>
-              <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">Age</InputLabel>
+              <FormControl sx={{ m: 1, minWidth: 120 }}>
+                <InputLabel id="demo-simple-select-label">Order By</InputLabel>
                 <Select
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
-                  value={age}
+                  value={orderBy}
                   label="Age"
                   onChange={handleChange}
+                  autoWidth
                 >
-                  <MenuItem value={10}>Ten</MenuItem>
-                  <MenuItem value={20}>Twenty</MenuItem>
-                  <MenuItem value={30}>Thirty</MenuItem>
+                  <MenuItem value={'created'}>Created on</MenuItem>
+                  <MenuItem value={'rating'}>Rating</MenuItem>
                 </Select>
               </FormControl>
             </div>
-            {/*<div className={classes.paperItem}>*/}
-            {/*  <ToggleButtonGroup value={selectedOrderByAscDesc} exclusive onChange={handleChangeOrderByAscDescFilter} aria-label="thumbnails size ratio">*/}
-            {/*    <Tooltip title={'Ascending'} value="asc" placement="top-start" arrow>*/}
-            {/*      <ToggleButton value="asc" aria-label="asc thumbnails">*/}
-            {/*        <FontAwesomeIcon icon={faSortAlphaUp} style={{ fontSize: '1.3em' }}/>*/}
-            {/*      </ToggleButton>*/}
-            {/*    </Tooltip>*/}
-            {/*    <Tooltip title={'Descending'} value="desc" placement="top" arrow>*/}
-            {/*      <ToggleButton value="desc" aria-label="desc thumbnails">*/}
-            {/*        <FontAwesomeIcon icon={faSortAlphaDownAlt} style={{ fontSize: '1.3em' }} />*/}
-            {/*      </ToggleButton>*/}
-            {/*    </Tooltip>*/}
-            {/*  </ToggleButtonGroup>*/}
-            {/*</div>*/}
+            <div className={classes.paperItem}>
+              <ToggleButtonGroup value={sortOrder} exclusive onChange={handleChangeOrderByAscDescFilter} aria-label="thumbnails size ratio">
+                <Tooltip title={'Ascending'} value="asc" placement="top-start" arrow>
+                  <ToggleButton value="asc" aria-label="asc thumbnails">
+                    Asc
+                  </ToggleButton>
+                </Tooltip>
+                <Tooltip title={'Descending'} value="desc" placement="top" arrow>
+                  <ToggleButton value="desc" aria-label="desc thumbnails">
+                    Desc
+                  </ToggleButton>
+                </Tooltip>
+              </ToggleButtonGroup>
+            </div>
           </Paper>
         </Grid>
       </Grid>
-      {/*<DataGrid*/}
-      {/*  rows={rows}*/}
-      {/*  columns={columns}*/}
-      {/*  // disableSelectionOnClick*/}
-      {/*  // autoHeight*/}
-      {/*  // autoPageSize*/}
-      {/*  // loading={isLoading}*/}
-      {/*/>*/}
-      {/*<DataGrid rows={rows} columns={columns} />*/}
+      <br/>
+      <TableContainer component={Paper} >
+        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          <TableHead>
+            <TableRow>
+              <TableCell width={300}>ID</TableCell>
+              <TableCell width={300}>Game Session</TableCell>
+              <TableCell width={150}>Rating</TableCell>
+              <TableCell width={700}>Comment</TableCell>
+              <TableCell width={160}>Created On</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {rows.map((row) => (
+              <TableRow key={row.id}>
+                <TableCell>{row.id}</TableCell>
+                <TableCell>{row.gameSessionId}</TableCell>
+                <TableCell><Rating value={row.rating} readOnly/></TableCell>
+                <TableCell>{row.comment}</TableCell>
+                <TableCell>{row.created}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </div>
   );
 }
