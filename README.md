@@ -18,7 +18,7 @@
 
 ## API
   You can use my swagger definition to have more thorough API documentation:
-  swagger definition: http://localhost:3000/swagger
+  swagger definition (make sure the server is running): http://localhost:3000/swagger
 
   Paste my definition in the input box at the top of the screen at:
   https://petstore.swagger.io/
