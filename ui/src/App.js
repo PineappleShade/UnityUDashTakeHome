@@ -4,7 +4,7 @@ import {
   createTheme, CssBaseline, IconButton, Toolbar, Tooltip, Typography,
 } from "@mui/material";
 import {ThemeProvider} from "@emotion/react";
-import {BrowserRouter, Link, Redirect, Route, Switch, useHistory} from "react-router-dom";
+import {BrowserRouter, Link, Route, Switch} from "react-router-dom";
 import GameSessionListing from "./layout/game-session-listing";
 import {makeStyles} from "@mui/styles";
 import LogIn from "./layout/log-in";
