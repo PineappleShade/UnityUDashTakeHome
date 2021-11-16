@@ -4,7 +4,7 @@ import {
   FormControl,
   Grid,
   InputLabel,
-  MenuItem,
+  MenuItem, OutlinedInput,
   Paper,
   Rating,
   Select, Skeleton,
@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 import {makeStyles} from "@mui/styles";
 import {Redirect} from "react-router-dom";
+import _ from "lodash";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -33,40 +34,57 @@ function FeedbackListing() {
   const [rows, setRows] = useState([]);
   const [orderBy, setOrderBy] = useState('created');
   const [sortOrder, setSortOrder] = useState('desc');
+  const [rating, setRating] = useState([]);
 
   useEffect(() => {
     getFeedback();
-  }, [orderBy, sortOrder]);
+  }, [orderBy, sortOrder, rating]);
 
   async function getFeedback(){
     try{
       setIsLoading(true);
-      const feedback = await axios.get(`${API_ENDPOINT}/feedback`, {headers: {
-        'x-sorting-by': orderBy,
-        'x-sorting-order': sortOrder,
-      }});
-      const parsedData = feedback.data.map( f => {
-        const createdOn = new Date(f.created * 1000);
-        return (
-          {
-            id: f.feedbackId,
-            gameSessionId: f.gameSessionId,
-            userId: f.userId,
-            rating: f.rating,
-            comment: f.comment,
-            created: createdOn.toLocaleString('en-US'),
+      const gameSessions = await axios.get(`${API_ENDPOINT}/gameSessions`);
+      const users = await axios.get(`${API_ENDPOINT}/users`);
+      const feedback = await axios.get(`${API_ENDPOINT}/feedback`,
+        {
+          headers: {
+            'x-sorting-by': orderBy,
+            'x-sorting-order': sortOrder,
+          },
+          params : {
+            rating: rating.length > 0 ? rating?.join(',') : null,
           }
-        )
-      });
-      setRows(parsedData);
+        });
+      if (feedback.status === 200){
+        const parsedData = feedback?.data?.map( f => {
+          const createdOn = new Date(f.created * 1000);
+          const gameSessionName = _.find(gameSessions?.data, { gameSessionId: f.gameSessionId });
+          const userName = _.find(users?.data, { userId: f.userId });
+          return (
+            {
+              id: f.feedbackId,
+              gameSessionId: gameSessionName?.gameSessionName,
+              userId: userName?.userName,
+              rating: f.rating,
+              comment: f.comment,
+              created: createdOn.toLocaleString('en-US'),
+            }
+          )
+        });
+        setRows(parsedData);
+      }
       setIsLoading(false);
     } catch (e) {
       console.error('Failed to fetch feedback: ' + e.message);
     }
   }
 
-  const handleChange = (event) => {
+  const handleOrderByChange = (event) => {
     setOrderBy(event.target.value);
+  };
+
+  const handleFilterChange = (event) => {
+    setRating(event.target.value);
   };
 
   const handleChangeOrderByAscDescFilter = (event, orderAscDescValue) => {
@@ -82,14 +100,34 @@ function FeedbackListing() {
         <Grid item xs={12} style={{ margin: 10 }}>
           <Paper className={classes.paper} variant="outlined">
             <div className={classes.paperItem}>
-              <FormControl sx={{ m: 1, minWidth: 120 }}>
-                <InputLabel id="demo-simple-select-label">Order By</InputLabel>
+              <FormControl sx={{ m: 1, width: 150 }}>
+                <InputLabel id="rating-select-label">Filter By Rating</InputLabel>
                 <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
+                  labelId="rating-select-label"
+                  id="rating-select"
+                  multiple
+                  value={rating}
+                  onChange={handleFilterChange}
+                  input={<OutlinedInput id="select-multiple-rating" label="Rating" />}
+                  renderValue={(selected) => selected.sort().join(', ')}
+                >
+                  {Array.from(new Array(6)).map((item, index) => (
+                    <MenuItem key={index} value={index}>
+                      <Rating name="read-only" value={index} readOnly />
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </div>
+            <div className={classes.paperItem}>
+              <FormControl sx={{ m: 1, minWidth: 120 }}>
+                <InputLabel id="order-by-select-label">Order By</InputLabel>
+                <Select
+                  labelId="order-by-select-label"
+                  id="order-by-select"
                   value={orderBy}
-                  label="Age"
-                  onChange={handleChange}
+                  label="Order By"
+                  onChange={handleOrderByChange}
                   autoWidth
                 >
                   <MenuItem value={'created'}>Created on</MenuItem>
@@ -119,17 +157,18 @@ function FeedbackListing() {
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell width={300}>Feedback ID</TableCell>
-              <TableCell width={300}>Game Session</TableCell>
-              <TableCell width={300}>User ID</TableCell>
-              <TableCell width={150}>Rating</TableCell>
-              <TableCell width={600}>Comment</TableCell>
-              <TableCell width={180}>Created On</TableCell>
+              <TableCell width={'18%'}>Feedback ID</TableCell>
+              <TableCell width={'15%'}>Game Session</TableCell>
+              <TableCell width={'15%'}>User</TableCell>
+              <TableCell width={'5%'}>Rating</TableCell>
+              <TableCell width={'36%'}>Comment</TableCell>
+              <TableCell width={'11%'}>Created On</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {isLoading &&
               <TableRow key={'Skeleton'}>
+                <TableCell><Skeleton variant="rectangular" width={'100%'} height={150} /></TableCell>
                 <TableCell><Skeleton variant="rectangular" width={'100%'} height={150} /></TableCell>
                 <TableCell><Skeleton variant="rectangular" width={'100%'} height={150} /></TableCell>
                 <TableCell><Skeleton variant="rectangular" width={'100%'} height={150} /></TableCell>

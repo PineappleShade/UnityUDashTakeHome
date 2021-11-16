@@ -48,11 +48,11 @@
 
 ## Extra information
  When the db is initialized it creates 4 users 
-  - Player 1
-  - Player 2
-  - Player 3
-  - Ops Team Member 1
+  - Player 1 (30ef5656-4500-11ec-81d3-0242ac130003)
+  - Player 2 (4023e4b6-4500-11ec-81d3-0242ac130003)
+  - Player 3 (44242972-4500-11ec-81d3-0242ac130003)
+  - Ops Team Member 1 (4aa9155a-4500-11ec-81d3-0242ac130003)
 
-It also creates 6 game sessions.
+It also creates 6 game sessions (check 01.game-session.sql).
 
 

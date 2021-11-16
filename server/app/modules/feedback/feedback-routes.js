@@ -9,6 +9,10 @@ const feedbackInsertSchema = Joi.object({
   comment: Joi.string(),
 });
 
+const feedbackFilterSchema = Joi.object({
+  rating: Joi.string(),
+});
+
 const insertFeedback = (req, res) => {
   const gameSessionId = req.params.gameSessionId;
   const payload = req.body;
@@ -34,20 +38,22 @@ const getAll = (req, res) => {
   const _offset = req.headers['x-pagination-offset'];
   const _sorting = req.headers['x-sorting-by'];
   const _order = req.headers['x-sorting-order'];
+  const query = req.query;
 
   return Promise.all([
     Joi.number().integer().validate(_limit),
     Joi.number().integer().validate(_offset),
-    Joi.string().validate(_sorting),
-    Joi.string().validate(_order),
+    Joi.string().valid('created', 'rating').validate(_sorting),
+    Joi.string().valid('desc', 'asc').validate(_order),
+    Joi.string().validate(query),
+    feedbackFilterSchema.validate(query),
   ]).then(() => {
-    return feedbackController.getAll(_limit, _offset, _sorting, _order).then((response) => {
+    return feedbackController.getAll(_limit, _offset, _sorting, _order, query?.rating?.split(',')).then((response) => {
       if (_.isArray(response) && _.isEmpty(response)) { // if response empty return 204
         res.sendStatus(204);
       } else {
         res.json(response);
       }
-
       return (response === undefined) ? {} : response;
     });
   });

@@ -4,7 +4,7 @@ CREATE TABLE `feedback` (
   `feedbackId` VARCHAR(36),
   `gameSessionId` VARCHAR(36),
   `userId` VARCHAR(36),
-  `rating` INTEGER,
+  `rating` INTEGER DEFAULT 0,
   `comment` TEXT,
   `created` INT NOT NULL,
   PRIMARY KEY (`feedbackId`)

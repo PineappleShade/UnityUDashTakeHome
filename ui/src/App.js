@@ -10,7 +10,7 @@ import {makeStyles} from "@mui/styles";
 import LogIn from "./layout/log-in";
 import FeedbackListing from "./layout/feedback-listing";
 import ExitToAppRoundedIcon from '@mui/icons-material/ExitToAppRounded';
-import {useEffect, useState} from "react";
+import {useState} from "react";
 
 const useStyles = makeStyles(() => ({
   navbarLink: {
@@ -23,18 +23,6 @@ const useStyles = makeStyles(() => ({
 function App() {
   const classes = useStyles();
   const [currentUser, setCurrentUser] = useState(JSON.parse(localStorage.getItem('currentUser')));
-
-    useEffect(() => {
-      window.addEventListener('storage', () => {
-        setCurrentUser(JSON.parse(localStorage.getItem('currentUser')));
-      });
-
-      return () => {
-        window.removeEventListener('storage', () => {
-          setCurrentUser(JSON.parse(localStorage.getItem('currentUser')));
-        });
-      };
-    }, [currentUser]);
 
   const theme = createTheme({
     palette: {

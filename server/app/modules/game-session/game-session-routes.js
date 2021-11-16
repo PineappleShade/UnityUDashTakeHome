@@ -12,8 +12,8 @@ const getAll = (req, res) => {
   return Promise.all([
     Joi.number().integer().validate(_limit),
     Joi.number().integer().validate(_offset),
-    Joi.string().validate(_sorting),
-    Joi.string().validate(_order),
+    Joi.string().valid('created', 'gameSessionName').validate(_sorting),
+    Joi.string().valid('desc', 'asc').validate(_order),
   ]).then(() => {
     return gameSessionController.getAll(_limit, _offset, _sorting, _order).then((response) => {
       if (_.isArray(response) && _.isEmpty(response)) { // if response empty return 204

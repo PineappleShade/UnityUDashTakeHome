@@ -4,7 +4,7 @@ const tag = {
 };
 
 const paths = {
-  '/feedback': {
+  '/api/feedback': {
     get: {
       tags: ['Feedback'],
       description: 'Get all feedback',
@@ -38,7 +38,16 @@ const paths = {
           type: 'string',
           enum: ['asc', 'desc'],
           default: 'desc'
-        }
+        },
+        {
+          in: 'query',
+          name: 'rating',
+          schema: {
+            type: 'string',
+            enum: [0,1,2,3,4,5],
+            example: '0,3,5',
+          },
+        },
       ],
       responses: {
         '204': {
@@ -47,7 +56,7 @@ const paths = {
       },
     },
   },
-  'feedback/{gameSessionId}': {
+  '/api/feedback/{gameSessionId}': {
     post: {
       tags: ['Feedback'],
       description: 'Insert new feedback',

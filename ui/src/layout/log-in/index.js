@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Box,
   Button,
@@ -8,33 +8,30 @@ import {
 } from "@mui/material";
 import _ from 'lodash';
 import { useHistory, withRouter} from "react-router-dom";
+import axios from "axios";
 
 function LogIn(props){
+  const API_ENDPOINT = 'http://localhost:3000/api';
   const history = useHistory();
-  const [selectedUser, setSelectedUser] = React.useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [selectedUser, setSelectedUser] = useState('');
+  const [users, setUsers] = useState([]);
   const localStorage = window.localStorage;
-  const listOfUsers = [
-    {
-      userId: '30ef5656-4500-11ec-81d3-0242ac130003',
-      userName: 'Player 1',
-      userType: 'player',
-    },
-    {
-      userId: '4023e4b6-4500-11ec-81d3-0242ac130003',
-      userName: 'Player 2',
-      userType: 'player',
-    },
-    {
-      userId: '44242972-4500-11ec-81d3-0242ac130003',
-      userName: 'Player 3',
-      userType: 'player',
-    },
-    {
-      userId: '4aa9155a-4500-11ec-81d3-0242ac130003',
-      userName: 'Ops TeamMember 1',
-      userType: 'ops',
-    },
-  ]
+
+  useEffect(() => {
+    getUsers();
+  }, []);
+
+  async function getUsers(){
+    try{
+      setIsLoading(true);
+      const users = await axios.get(`${API_ENDPOINT}/users`);
+      setUsers(users.data);
+      setIsLoading(false);
+    } catch (e) {
+      console.error('Failed to fetch game sessions: ' + e.message);
+    }
+  }
 
   const handleChange = (event) => {
     setSelectedUser(event.target.value);
@@ -42,7 +39,7 @@ function LogIn(props){
 
   const handleLogIn = (e) => {
     e.preventDefault();
-    const currentUser = _.find(listOfUsers, { userId: selectedUser });
+    const currentUser = _.find(users, { userId: selectedUser });
     localStorage.setItem('currentUser', JSON.stringify(currentUser));
     props.callback(currentUser);
     if (currentUser.userType === 'player'){
@@ -62,7 +59,7 @@ function LogIn(props){
         alignItems: 'center',
       }}
     >
-      <Box sx={{ mt: 1 }}>
+      <Box sx={{ mt: 1, width: 200 }}>
         <FormControl fullWidth>
           <InputLabel id="user-select-label">User</InputLabel>
           <Select
@@ -72,10 +69,11 @@ function LogIn(props){
             label="User"
             onChange={handleChange}
           >
-            <MenuItem value={'30ef5656-4500-11ec-81d3-0242ac130003'}>Player 1</MenuItem>
-            <MenuItem value={'4023e4b6-4500-11ec-81d3-0242ac130003'}>Player 2</MenuItem>
-            <MenuItem value={'44242972-4500-11ec-81d3-0242ac130003'}>Player 3</MenuItem>
-            <MenuItem value={'4aa9155a-4500-11ec-81d3-0242ac130003'}>Ops TeamMember 1</MenuItem>
+            {users.map((user) => (
+              <MenuItem key={user.userId} value={user.userId}>{user.userName}</MenuItem>
+            ))
+
+            }
           </Select>
         </FormControl>
         <Button

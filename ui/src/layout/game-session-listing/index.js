@@ -74,16 +74,18 @@ function GameSessionListing(){
   };
 
   const handleSubmitFeedback = async () => {
-    try {
-      await axios.post(`${API_ENDPOINT}/feedback/${selectedGameSession}`, {
-        userId: currentUser.userId,
-        rating: rating,
-        comment: comment,
-      });
-    } catch (e) {
-      console.error('Failed to submit feedback: ' + e.message );
-      alert('Failed to submit feedback: ' + e.message);
-    }
+    await axios.post(`${API_ENDPOINT}/feedback/${selectedGameSession}`, {
+      userId: currentUser.userId,
+      rating: rating,
+      comment: comment,
+    }).catch((e) => {
+      if (e.response){
+        const errorMessage = e.response.data.error;
+        const status = `${e.response.status} ${e.response.statusText}` ;
+        console.error(`Failed to submit feedback: \n ${status} \n ${errorMessage}`);
+        alert(`Failed to submit feedback: \n ${status} \n ${errorMessage}`);
+      }
+    });
 
     setComment(null);
     setRating(null);
