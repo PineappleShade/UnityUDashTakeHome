@@ -12,11 +12,13 @@
 
 
 * Run Server:
+  * `cd server`
   * `npm install`
   * `npm start`
 
 
-* Run Server:
+* Run UI:
+  * `cd ui`
   * `npm install`
   * `npm start`
   
