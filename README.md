@@ -3,6 +3,7 @@
 ## Requirements
 - Docker
 - Node-JS
+- npm
 
 ## Instructions
 * Run DB:
