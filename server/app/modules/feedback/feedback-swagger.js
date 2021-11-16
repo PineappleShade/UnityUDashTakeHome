@@ -14,26 +14,30 @@ const paths = {
           name: 'x-pagination-limit',
           type: 'integer',
           format: 'int32',
+          default: 100
         },
         {
           in: 'header',
           name: 'x-pagination-offset',
           type: 'integer',
           format: 'int32',
+          default: 0
         },
         {
           in: 'header',
           name: 'x-sorting-by',
           description: 'Sort feedback by:',
           type: 'string',
-          enum: ['created', 'rating']
+          enum: ['created', 'rating'],
+          default: 'created'
         },
         {
           in: 'header',
           name: 'x-sorting-order',
           description: 'Feedback sort order:',
           type: 'string',
-          enum: ['asc', 'desc']
+          enum: ['asc', 'desc'],
+          default: 'desc'
         }
       ],
       responses: {

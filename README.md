@@ -17,6 +17,11 @@
   `npm start`
 
 ## API
+  You can use my swagger definition to have more thorough API documentation:
+  swagger definition: http://localhost:3000/swagger
+
+  Paste my definition in the input box at the top of the screen at:
+  https://petstore.swagger.io/
 
 - `GET /feedback`
 
@@ -34,6 +39,13 @@
   | `gameSessionId` | Game Session Id |
   | `body` | ``{ userId: '30ef5656-4500-11ec-81d3-0242ac130003', rating: 4, comment: 'comment' }`` | 
 
+## Extra information
+ When the db is initialized it creates 4 users 
+  - Player 1
+  - Player 2
+  - Player 3
+  - Ops Team Member 1
 
+It also creates 6 game sessions.
 
 
