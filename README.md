@@ -27,8 +27,8 @@
   You can use my swagger definition to have more thorough API documentation:
   swagger definition (make sure the server is running): http://localhost:3000/swagger
 
-  Paste my definition in the input box at the top of the screen at:
-  https://petstore.swagger.io/
+  Paste "http://localhost:3000/swagger" in the input box at the top of the screen at:
+  https://petstore.swagger.io/ and click explore.
 
 - `GET /feedback`
 
@@ -38,6 +38,10 @@
   | `x-pagination-offset` | Get result offset | 0
   | `x-sorting-by` | Sort parameter ('created','rating') | 'created'
   | `x-sorting-order` | Sort order ('desc', 'asc')' | 'desc'
+  
+  | Parameters | Description | Default value |
+  | ----------- | ----------- | ----------- |
+  | `rating` | Rating filter | 0,1,2,3,4,5
 
 - `POST /feedback/:gameSessionId`
 
