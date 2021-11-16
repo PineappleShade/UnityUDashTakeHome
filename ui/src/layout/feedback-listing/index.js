@@ -119,11 +119,12 @@ function FeedbackListing() {
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell width={300}>ID</TableCell>
+              <TableCell width={300}>Feedback ID</TableCell>
               <TableCell width={300}>Game Session</TableCell>
+              <TableCell width={300}>User ID</TableCell>
               <TableCell width={150}>Rating</TableCell>
-              <TableCell width={700}>Comment</TableCell>
-              <TableCell width={160}>Created On</TableCell>
+              <TableCell width={600}>Comment</TableCell>
+              <TableCell width={180}>Created On</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -141,6 +142,7 @@ function FeedbackListing() {
                 <TableRow key={row.id}>
                   <TableCell>{row.id}</TableCell>
                   <TableCell>{row.gameSessionId}</TableCell>
+                  <TableCell>{row.userId}</TableCell>
                   <TableCell><Rating value={row.rating} readOnly/></TableCell>
                   <TableCell>{row.comment}</TableCell>
                   <TableCell>{row.created}</TableCell>
