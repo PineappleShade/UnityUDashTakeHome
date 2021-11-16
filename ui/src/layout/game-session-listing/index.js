@@ -81,6 +81,7 @@ function GameSessionListing(){
         comment: comment,
       });
     } catch (e) {
+      console.log(e);
       console.error('Failed to submit feedback: ' + e.message );
       alert('Failed to submit feedback: ' + e.message);
     }

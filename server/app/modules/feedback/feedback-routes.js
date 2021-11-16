@@ -24,7 +24,7 @@ const insertFeedback = (req, res) => {
       }
       return response;
     }).catch((e) => {
-      res.status(e.httpStatus || 500).json(e.key);
+      res.status(e.httpStatus || 500).send({ error: e.key });
     });
   });
 };

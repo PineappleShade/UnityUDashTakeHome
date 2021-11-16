@@ -1,7 +1,6 @@
 import * as React from 'react';
 import {
   AppBar,
-  Box,
   createTheme, CssBaseline, IconButton, Toolbar, Tooltip, Typography,
 } from "@mui/material";
 import {ThemeProvider} from "@emotion/react";
@@ -25,6 +24,18 @@ function App() {
   const classes = useStyles();
   const [currentUser, setCurrentUser] = useState(JSON.parse(localStorage.getItem('currentUser')));
 
+    useEffect(() => {
+      window.addEventListener('storage', () => {
+        setCurrentUser(JSON.parse(localStorage.getItem('currentUser')));
+      });
+
+      return () => {
+        window.removeEventListener('storage', () => {
+          setCurrentUser(JSON.parse(localStorage.getItem('currentUser')));
+        });
+      };
+    }, [currentUser]);
+
   const theme = createTheme({
     palette: {
       mode: 'dark',
@@ -37,48 +48,47 @@ function App() {
     setCurrentUser(null);
   }
 
+  function refreshUser(user){
+    setCurrentUser(user);
+  }
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <BrowserRouter>
-        <Box sx={{ flexGrow: 1 }}>
-          {!currentUser &&
-            <Redirect to="/" />
-          }
-          <AppBar position="static">
-            <Toolbar>
-              <Typography component="div" sx={{ flexGrow: 1 }}>
-                <Link to={'/'} className={classes.navbarLink}>
-                  <span >Log In</span>
-                </Link>
-                {currentUser && currentUser.userType === 'player' &&
-                  <Link to={'/gameSessions'} className={classes.navbarLink}>
-                    <span >Game Sessions</span>
-                  </Link>
-                }
-                {currentUser && currentUser.userType === 'ops' &&
-                  <Link to={'/feedback'} className={classes.navbarLink}>
-                    <span >Feedback</span>
-                  </Link>
-                }
-              </Typography>
-
-              {currentUser &&
-                <div>
-                  <Tooltip title="Log out">
-                    <IconButton edge="end" color="inherit" onClick={logOut} size="large">
-                      <ExitToAppRoundedIcon/>
-                    </IconButton>
-                  </Tooltip>
-                  <span style={{ paddingLeft: 10 }}>Logged in as: {currentUser.userName}</span>
-                </div>
+        <AppBar position="static">
+          <Toolbar>
+            <Typography component="div" sx={{ flexGrow: 1 }}>
+              <Link to={'/'} className={classes.navbarLink}>
+                <span >Log In</span>
+              </Link>
+              {currentUser && currentUser.userType === 'player' &&
+              <Link to={'/gameSessions'} className={classes.navbarLink}>
+                <span >Game Sessions</span>
+              </Link>
               }
-            </Toolbar>
-          </AppBar>
-        </Box>
+              {currentUser && currentUser.userType === 'ops' &&
+              <Link to={'/feedback'} className={classes.navbarLink}>
+                <span >Feedback</span>
+              </Link>
+              }
+            </Typography>
+
+            {currentUser &&
+            <div>
+              <Tooltip title="Log out">
+                <IconButton edge="end" color="inherit" onClick={logOut} size="large">
+                  <ExitToAppRoundedIcon/>
+                </IconButton>
+              </Tooltip>
+              <span style={{ paddingLeft: 10 }}>Logged in as: {currentUser.userName}</span>
+            </div>
+            }
+          </Toolbar>
+        </AppBar>
         <Switch>
           <Route exact path='/'>
-            <LogIn/>
+            <LogIn callback={refreshUser}/>
           </Route>
           <Route exact path='/gameSessions'>
             <GameSessionListing />

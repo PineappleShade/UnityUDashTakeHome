@@ -7,7 +7,7 @@ import {
   MenuItem,
   Paper,
   Rating,
-  Select,
+  Select, Skeleton,
   Table, TableBody, TableCell,
   TableContainer, TableHead, TableRow, ToggleButton, ToggleButtonGroup,
   Tooltip
@@ -127,15 +127,26 @@ function FeedbackListing() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row) => (
-              <TableRow key={row.id}>
-                <TableCell>{row.id}</TableCell>
-                <TableCell>{row.gameSessionId}</TableCell>
-                <TableCell><Rating value={row.rating} readOnly/></TableCell>
-                <TableCell>{row.comment}</TableCell>
-                <TableCell>{row.created}</TableCell>
+            {isLoading &&
+              <TableRow key={'Skeleton'}>
+                <TableCell><Skeleton variant="rectangular" width={'100%'} height={150} /></TableCell>
+                <TableCell><Skeleton variant="rectangular" width={'100%'} height={150} /></TableCell>
+                <TableCell><Skeleton variant="rectangular" width={'100%'} height={150} /></TableCell>
+                <TableCell><Skeleton variant="rectangular" width={'100%'} height={150} /></TableCell>
+                <TableCell><Skeleton variant="rectangular" width={'100%'} height={150} /></TableCell>
               </TableRow>
-            ))}
+            }
+            {!isLoading &&
+              rows.map((row) => (
+                <TableRow key={row.id}>
+                  <TableCell>{row.id}</TableCell>
+                  <TableCell>{row.gameSessionId}</TableCell>
+                  <TableCell><Rating value={row.rating} readOnly/></TableCell>
+                  <TableCell>{row.comment}</TableCell>
+                  <TableCell>{row.created}</TableCell>
+                </TableRow>
+              ))
+            }
           </TableBody>
         </Table>
       </TableContainer>

@@ -7,9 +7,9 @@ import {
   MenuItem, Select,
 } from "@mui/material";
 import _ from 'lodash';
-import {Link, useHistory, withRouter} from "react-router-dom";
+import { useHistory, withRouter} from "react-router-dom";
 
-function LogIn(){
+function LogIn(props){
   const history = useHistory();
   const [selectedUser, setSelectedUser] = React.useState('');
   const localStorage = window.localStorage;
@@ -44,7 +44,7 @@ function LogIn(){
     e.preventDefault();
     const currentUser = _.find(listOfUsers, { userId: selectedUser });
     localStorage.setItem('currentUser', JSON.stringify(currentUser));
-    console.log({currentUser});
+    props.callback(currentUser);
     if (currentUser.userType === 'player'){
       history.push(`/gameSessions`);
     }
@@ -79,7 +79,6 @@ function LogIn(){
           </Select>
         </FormControl>
         <Button
-          component={Link}
           fullWidth
           variant="contained"
           sx={{ mt: 3, mb: 2 }}
