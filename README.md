@@ -5,16 +5,21 @@
 - Node-JS
 
 ## Instructions
-- Run DB:
-`docker run -d -p '3306:3306' -e 'MYSQL_ALLOW_EMPTY_PASSWORD=true' --name mysql mysql`
+* Run DB:
+  * `cd db`
+  * `docker build -t mysql .`
+  * `docker run -d -p '3306:3306' -e 'MYSQL_ALLOW_EMPTY_PASSWORD=true' --name mysql mysql`
 
-- Run Server: 
-  `npm install`
-  `npm start`
 
-- Run UI:
-  `npm install`
-  `npm start`
+* Run Server:
+  * `npm install`
+  * `npm start`
+
+
+* Run Server:
+  * `npm install`
+  * `npm start`
+  
 
 ## API
   You can use my swagger definition to have more thorough API documentation:
